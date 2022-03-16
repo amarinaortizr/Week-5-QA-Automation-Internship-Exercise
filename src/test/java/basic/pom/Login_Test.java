@@ -9,13 +9,18 @@ import org.openqa.selenium.WebDriver;
 public class Login_Test {
 
 	static WebDriver driver;
+	Base base;
 	LogInPage logInPage;
-	
+	BookStorePage bookStorePage;
+	ProfilePage profilePage;
 		
 	@Before
 	public void setUp() {
-		logInPage = new LogInPage(driver);
-		driver = logInPage.chromeDriverConnection();
+		base = new Base(driver);
+		driver = base.chromeDriverConnection();
+		logInPage = new LogInPage(base.driver);
+		profilePage = new ProfilePage(base.driver);
+		bookStorePage = new BookStorePage(base.driver);
 		driver.manage().window().maximize();
 		logInPage.visit("https://demoqa.com/login");
 	}
@@ -24,14 +29,14 @@ public class Login_Test {
 	public void test() {
 		JavascriptExecutor js = (JavascriptExecutor)driver;
 		logInPage.logIn();
-		logInPage.goToBookStore(js);
-		logInPage.addFirstBooktoCollection(js);
-		logInPage.goProfileAndVerifyBook();
+		profilePage.goToBookStore(js);
+		bookStorePage.addFirstBooktoCollection(js);
+		bookStorePage.goProfileAndVerifyBook();
 	}
 	
 	@After
 	public void tearDown() {
-		logInPage.deleteBook();
+		profilePage.deleteBook();
 		driver.close();
 		driver.quit();
 	}
